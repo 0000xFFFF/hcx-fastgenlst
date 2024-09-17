@@ -16,17 +16,11 @@ size_t utf8_strlen(const std::string& str) {
     size_t length = 0;
     for (size_t i = 0; i < str.length(); ) {
         unsigned char c = str[i];
-        if (c <= 0x7F) {
-            i += 1;
-        } else if (c >= 0xC2 && c <= 0xDF) {
-            i += 2;
-        } else if (c >= 0xE0 && c <= 0xEF) {
-            i += 3;
-        } else if (c >= 0xF0 && c <= 0xF4) {
-            i += 4;
-        } else {
-            return static_cast<size_t>(-1);
-        }
+        if      (c <= 0x7F)              { i += 1;    } // 1-byte character (ASCII)
+        else if (c >= 0xC2 && c <= 0xDF) { i += 2;    } // 2-byte character
+        else if (c >= 0xE0 && c <= 0xEF) { i += 3;    } // 3-byte character
+        else if (c >= 0xF0 && c <= 0xF4) { i += 4;    } // 4-byte character
+        else                             { return -1; } // Invalid UTF-8 sequence encountered at byte i
         ++length;
     }
     return length;
