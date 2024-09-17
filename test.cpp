@@ -26,39 +26,10 @@ size_t utf8_strlen(const std::string& str) {
     return length;
 }
 
-size_t get_python_strlen(const std::string& str) {
-
-    const char* command = "python3 -c \"import sys; input = sys.stdin.read(); print(len(input)) ; exit()\"";
-
-    // Create a pipe to communicate with Python
-    FILE* pipe = popen(command, "w");
-    if (!pipe) {
-        std::cerr << "Error: Could not open pipe to Python\n";
-        return static_cast<size_t>(-1);
-    }
-
-    // Write the string to Python via the pipe
-    fwrite(str.c_str(), 1, str.size(), pipe);
-    fclose(pipe);
-
-    // Read the result from Python
-    size_t length = 0;
-    char buffer[128];
-    FILE* pipe_read = popen(command, "r");
-    if (!pipe_read) {
-        std::cerr << "Error: Could not open pipe to read Python output\n";
-        return static_cast<size_t>(-1);
-    }
-
-    while (fgets(buffer, sizeof(buffer), pipe_read) != nullptr) {
-        length = std::stoi(buffer);
-    }
-    pclose(pipe_read);
-    return length;
-}
-
-size_t get_python_strlen_2file_old(const std::string& str) {
-    std::ofstream temp_file("temp_input.txt");
+size_t get_python_strlen(const std::string& str, const size_t current_line) {
+    
+    std::string temp_file_name = "temp_input_" + std::to_string(current_line) + ".txt";
+    std::ofstream temp_file(temp_file_name);
     if (!temp_file) {
         std::cerr << "Error: Could not create temporary file\n";
         return static_cast<size_t>(-1);
@@ -66,19 +37,16 @@ size_t get_python_strlen_2file_old(const std::string& str) {
     temp_file << str;
     temp_file.close();
 
-    std::string command = "python3 -c \"with open('temp_input.txt', 'r', encoding='utf-8', errors='ignore') as f: print(len(f.read()))\"";
+    std::string command = "python3 -c \"with open('" + temp_file_name + "', 'r', encoding='utf-8', errors='ignore') as f: print(len(f.read()))\"";
     FILE* pipe = popen(command.c_str(), "r");
     if (!pipe) return static_cast<size_t>(-1);
     
     char buffer[128];
     std::string result = "";
-    
-    while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
-        result += buffer;
-    }
+    while (fgets(buffer, sizeof(buffer), pipe) != nullptr) { result += buffer; }
     
     pclose(pipe);
-    std::filesystem::remove("temp_input.txt");
+    std::filesystem::remove(temp_file_name);
     return std::stoi(result);
 }
 
@@ -155,6 +123,7 @@ void ThreadPool::wait_for_completion() {
 }
 
 
+/*
 int main(int argc, char** argv) {
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <input_file>\n";
@@ -192,8 +161,9 @@ int main(int argc, char** argv) {
     infile.close();
     return 0;
 }
+*/
 
-/*
+//*
 int main(int argc, char** argv) {
     if (argc < 3) {
         std::cerr << "Usage: " << argv[0] << " <input_file> <num_threads>\n";
@@ -219,7 +189,7 @@ int main(int argc, char** argv) {
         ++current_line;
         pool.enqueue([line, current_line, total_lines] {
             size_t cpp_length = utf8_strlen(line);
-            size_t python_length = get_python_strlen(line);
+            size_t python_length = get_python_strlen(line, current_line);
             if (cpp_length != python_length) {
                 std::lock_guard<std::mutex> lock(print_mutex);
                 std::cout << current_line << "/" << total_lines << " -- '" << line << "' -- " 
@@ -232,4 +202,4 @@ int main(int argc, char** argv) {
     pool.wait_for_completion();
     return 0;
 }
-*/
+/**/
