@@ -135,10 +135,9 @@ void out_minlen_uniq(const std::string& word) {
     else         { std::cout << word << '\n'; }
 }
 
-
-void generate_wi(const std::string& w1, const std::string& w2)  { out_minlen_uniq(w1 + w2); }
-void generate_iw(const std::string& w1, const std::string& w2)  { out_minlen_uniq(w2 + w1); }
-void generate_iwi(const std::string& w1, const std::string& w2) { out_minlen_uniq(w2 + w1 + w2); }
+inline void generate_wi(const std::string& w1, const std::string& w2)  { out_minlen_uniq(w1 + w2); }
+inline void generate_iw(const std::string& w1, const std::string& w2)  { out_minlen_uniq(w2 + w1); }
+inline void generate_iwi(const std::string& w1, const std::string& w2) { out_minlen_uniq(w2 + w1 + w2); }
 
 // Generate suffixes for a word (e.g., word + "123", word + "!")
 void generate_suffixes(const std::string& word, std::function<void(const std::string&, const std::string&)> callback) {
@@ -325,7 +324,7 @@ int main(int argc, char** argv) {
 
     if (verbose) { print_args(); }
 
-    print_loaded_words();
+    //print_loaded_words();
 
     // Open output file if specified
     if (to_file) { output.open(output_file); }
