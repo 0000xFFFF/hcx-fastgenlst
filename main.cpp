@@ -413,7 +413,8 @@ int main(int argc, char** argv) {
 
     if (verbose) {
         print_args();
-        print_words();
+        // TODO: PRINT MORE INFO -- WORD COUNT.. ETC
+        //print_words();
     }
 
     // Open output file if specified
