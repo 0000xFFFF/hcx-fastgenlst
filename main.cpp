@@ -37,6 +37,9 @@ int min_len = 8;
 std::string input_file, output_file;
 std::ofstream output;
 
+// TODO: if -1 try to get len of string anyway
+// TODO: try to make smiliar func like: python's utf8 'ignore errors' str(len())
+// TODO: compare my new version with python's
 size_t utf8_strlen(const std::string& str) {
     size_t length = 0;
     for (size_t i = 0; i < str.length(); ) {
