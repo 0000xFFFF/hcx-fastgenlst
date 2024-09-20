@@ -25,7 +25,8 @@ std::set<std::string> arg_words;
 std::set<std::string> words;
 std::unordered_set<std::string> output_uniq;
 std::mutex mtx;
-bool verbose = false, lower = false, upper = false, title = false, reverse = false,
+bool verbose = false, verbose_more = false,
+     lower = false, upper = false, title = false, reverse = false,
      wordint = false, intword = false, intwordint = false,
      to_file = false,
      check = false,
@@ -127,16 +128,12 @@ std::string utf8_titlecase(const std::string& str) {
 }
 
 void print_args() {
-    // TODO: make this output pretty
-    std::cerr << "vlutr123cdzy\n" <<
-    verbose << lower << upper << title << reverse << wordint << intword << intwordint << check << double_mode << double_small << year << std::endl;
-}
-
-// TODO: THIS IS ONLY FOR TESTING // REMOVE IF NOT NEEDED
-void print_words() {
-    std::cerr << "==[ BEGIN WORDSET ]==" << std::endl;
-    for (const auto& word : words) { std::cerr << word << " -- len: " << utf8_strlen(word) << std::endl; }
-    std::cerr << "==[ END WORDSET ]==" << std::endl;
+    std::cerr << "vlutr123cdzy\n"
+    << verbose << lower << upper << title << reverse << wordint << intword << intwordint << check << double_mode << double_small << year << std::endl;
+    if (!input_file.empty()) { std::cerr << "input file: " << input_file << std::endl; }
+    if (to_file) { std::cerr << "output file: " << output_file << std::endl; }
+    else         { std::cerr << "printing to stdout" << std::endl; }
+    std::cerr << "word set length: " << words.size() << std::endl;
 }
 
 // Add variations of a word (lowercase, uppercase, title case, reverse)
@@ -227,7 +224,6 @@ void out_minlen_uniq(const std::string& word) {
     if (utf8_strlen(word) < min_len) return; // TODO: needs testing
 
     if (check) {
-        std::lock_guard<std::mutex> lock(mtx);
         if (output_uniq.find(word) != output_uniq.end()) return;
         output_uniq.insert(word);
     }
@@ -314,29 +310,23 @@ void wordnum() {
 
 // Handle double mode generation (word1 + join + word2)
 void namename() {
+
     int words_n = words.size();
-
-    // TODO: DO SOME TESTING --- THIS ISN'T TESTED AT ALL
-
-    Progress progress(words_n * (words_n - 1));
+    Progress progress(words_n);
     if (verbose) { progress.start(); }
 
     int count = 0;
     for (const auto& word : words) {
         out_minlen_uniq(word + double_join + word);
-        for (const auto& word2 : words) {
-            if (word != word2) {
-                out_minlen_uniq(word + double_join + word2);
-            }
-        }
     }
 
-    for (const auto& word : words) {
-        progress.update(++count);
-        out_minlen_uniq(word + double_join + word);
-        for (const auto& word2 : words) {
-            if (word != word2) {
-                out_minlen_uniq(word + double_join + word2);
+    if (!double_small) {
+        for (const auto& word : words) {
+            progress.update(++count);
+            for (const auto& word2 : words) {
+                if (word != word2) {
+                    out_minlen_uniq(word + double_join + word2);
+                }
             }
         }
     }
@@ -366,7 +356,7 @@ void print_help() {
     "   -s word    append word to word set for generation (can have multiple -s)\n"
     "   -i infile  append every line in file to word set\n"
     "   -o outfile file to write to (default: stdout)\n"
-    "   -v         print status\n"
+    "   -v         be verbose (print status)\n"
     "   -l         add lowercase word variation to word set\n"
     "   -u         add UPPERCASE word variation to word set\n"
     "   -t         add Title word variation to word set\n"
@@ -383,6 +373,7 @@ void print_help() {
     "\n"
     ;
 }
+
 bool load_args(int& argc, char**& argv) {
     int opt;
     while ((opt = getopt(argc, argv, "hs:i:o:vlutr123cdzyjm:")) != -1) {
@@ -421,11 +412,7 @@ int main(int argc, char** argv) {
     // Load words from file if specified
     if (!input_file.empty()) { load_input_file(input_file); }
 
-    if (verbose) {
-        print_args();
-        // TODO: PRINT MORE INFO -- WORD COUNT.. ETC
-        //print_words();
-    }
+    if (verbose) { print_args(); }
 
     // Open output file if specified
     if (to_file) { output.open(output_file); }
