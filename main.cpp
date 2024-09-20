@@ -124,10 +124,12 @@ std::string utf8_titlecase(const std::string& str) {
 }
 
 void print_args() {
+    // TODO: make this output pretty
     std::cerr << "vlutr123cdzy\n" <<
     verbose << lower << upper << title << reverse << wordint << intword << intwordint << check << double_mode << double_small << year << std::endl;
 }
 
+// TODO: THIS IS ONLY FOR TESTING // REMOVE IF NOT NEEDED
 void print_words() {
     std::cerr << "==[ BEGIN WORDSET ]==" << std::endl;
     for (const auto& word : words) { std::cerr << word << " -- len: " << utf8_strlen(word) << std::endl; }
@@ -310,6 +312,8 @@ void wordnum() {
 // Handle double mode generation (word1 + join + word2)
 void namename() {
     int words_n = words.size();
+
+    // TODO: DO SOME TESTING --- THIS ISN'T TESTED AT ALL
 
     Progress progress(words_n * (words_n - 1));
     if (verbose) { progress.start(); }
