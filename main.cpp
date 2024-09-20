@@ -45,6 +45,7 @@ void print_words() {
 // Add variations of a word (lowercase, uppercase, title case, reverse)
 void add_word_variations(const std::string& word) {
     words.insert(word);
+    // TODO: FIX -- PROBLEMATIC FOR UTF8
     if (lower) {
         std::string lower_word = word;
         std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(), ::tolower);
@@ -133,46 +134,9 @@ private:
     int prev_processed;
 };
 
-// Progress bar class to show processing status
-class ProgressBar {
-public:
-    ProgressBar(int total, int length = 25) : total(total), length(length), running(true), current(0) {}
-
-    void start() {
-        thread = std::thread([this]() {
-            while (running) {
-                display();
-                std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            }
-        });
-    }
-
-    void update(int progress) {
-        std::lock_guard<std::mutex> lock(mtx);
-        current = progress;
-    }
-
-    void stop() {
-        running = false;
-        if (thread.joinable()) { thread.join(); }
-    }
-
-    void display() {
-        int filled_length = (current * length) / total;
-        std::string bar(filled_length, '#');
-        bar.resize(length, '-');
-        std::cerr << "\r[" << bar << "] " << std::setw(3) << (current * 100) / total
-                  << "% (" << current << "/" << total << ") words processed" << std::flush;
-    }
-
-private:
-    int total, length, current;
-    bool running;
-    std::thread thread;
-};
-
-// Output function (to file or stdout)
 void out_minlen_uniq(const std::string& word) {
+
+    // TODO: FIX -- PROBLEMATIC FOR UTF8
     if (word.length() < min_len) return;
 
     if (check) {
@@ -183,7 +147,6 @@ void out_minlen_uniq(const std::string& word) {
 
     if (to_file) { output    << word << '\n'; }
     else         { std::cout << word << '\n'; }
-    // todo: might need to flush?
 }
 
 
