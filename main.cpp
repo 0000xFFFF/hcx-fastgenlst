@@ -214,7 +214,7 @@ void wordnum() {
 void namename() {
 
     int words_n = words.size();
-    Progress progress(words_n);
+    Progress progress(words_n * (words_n - 1));
     if (verbose) { progress.start(); }
 
     int count = 0;
@@ -225,8 +225,8 @@ void namename() {
     // TODO: try to speed this up it's really slow -- python itertools is faster :/
     if (!double_small) {
         for (const auto& word : words) {
-            progress.update(++count);
             for (const auto& word2 : words) {
+                progress.update(++count);
                 if (word != word2) {
                     out_minlen_uniq(word + double_join + word2);
                 }
