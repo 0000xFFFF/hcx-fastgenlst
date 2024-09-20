@@ -53,15 +53,7 @@ void add_word_variations(const std::string& word) {
     if (lower) { words.insert(utf8_tolower(word)); }
     if (upper) { words.insert(utf8_toupper(word)); }
     if (title) { words.insert(utf8_titlecase(word)); }
-
-    if (reverse) {
-        char* buff = new char[word.length()+1];
-        std::strcpy(buff, word.c_str());
-        utf8_reverse(buff);
-        std::string reversed(buff);
-        words.insert(reversed);
-        delete[] buff;
-    }
+    if (reverse) { words.insert(utf8_reverse(word)); }
 }
 
 class Progress {
@@ -313,6 +305,13 @@ bool load_args(int& argc, char**& argv) {
     return true;
 }
 
+
+void print_loaded_words() {
+    for (const auto& word : words) {
+        std::cerr << word << " -- " <<  utf8_strlen(word) << std::endl;
+    }
+}
+
 // Main function
 int main(int argc, char** argv) {
 
@@ -324,6 +323,8 @@ int main(int argc, char** argv) {
     if (!input_file.empty()) { load_input_file(input_file); }
 
     if (verbose) { print_args(); }
+
+    print_loaded_words();
 
     // Open output file if specified
     if (to_file) { output.open(output_file); }
