@@ -23,7 +23,6 @@
 std::unordered_set<std::string> arg_words;
 std::unordered_set<std::string> words;
 std::unordered_set<std::string> output_uniq;
-std::mutex mtx;
 bool verbose = false, verbose_more = false,
      lower = false, upper = false, title = false, reverse = false,
      wordint = false, intword = false, intwordint = false,
@@ -83,11 +82,13 @@ public:
 
         int filled_length = static_cast<int>(length * percent_complete / 100.0);
         std::string bar = std::string(filled_length, '#') + std::string(length - filled_length, '-');
-
-        std::cerr << "\r[" << bar << "] " << std::fixed << std::setprecision(0)
-                  << percent_complete << "% (" << current << "/" << total << ") "
-                  << std::fixed << std::setprecision(1) << words_per_sec << " w/s          ";
-        std::cerr.flush();
+        {
+            std::lock_guard<std::mutex> lock(cerr_mutex);
+            std::cerr << "\r[" << bar << "] " << std::fixed << std::setprecision(0)
+                << percent_complete << "% (" << current << "/" << total << ") "
+                << std::fixed << std::setprecision(1) << words_per_sec << " w/s          ";
+            std::cerr.flush();
+        }
 
         prev_time = now;
         prev_processed = current;
@@ -119,6 +120,7 @@ private:
     std::thread progress_thread;
     std::chrono::steady_clock::time_point start_time, prev_time;
     int prev_processed;
+    std::mutex cerr_mutex;
 };
 
 inline void out_minlen_uniq(const std::string& word) {
