@@ -110,6 +110,8 @@ std::string utf8_toupper(const std::string& input) {
 }
 
 std::string utf8_titlecase(const std::string& str) {
+    if (str.length() <= 0) { return ""; }
+
     int i = 0;
     unsigned char c = str[i];
     size_t char_length = 0;
