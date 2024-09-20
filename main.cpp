@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <unordered_set>
 #include <functional>
+#include <atomic>
 
 // Global settings and flags
 std::set<std::string> arg_words;
@@ -65,6 +66,72 @@ void add_word_variations(const std::string& word) {
         words.insert(reversed_word);
     }
 }
+
+class Progress {
+public:
+    Progress(int total, int length = 25)
+        : current(0), total(total), length(length), running(true), 
+          start_time(std::chrono::steady_clock::now()), prev_time(start_time), prev_processed(0) {
+    }
+
+    void start() {
+        progress_thread = std::thread([this]() {
+            while (running) {
+                display(current.load());
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            }
+        });
+    }
+
+    void display(int current) {
+        auto now = std::chrono::steady_clock::now();
+        std::chrono::duration<double> elapsed_time = now - start_time;
+        std::chrono::duration<double> time_delta = now - prev_time;
+
+        double words_per_sec = (current - prev_processed) / time_delta.count();
+
+        // Prevent division by zero
+        double percent_complete = (total > 0) ? (static_cast<double>(current) / total) * 100.0 : 100.0;
+
+        int filled_length = static_cast<int>(length * percent_complete / 100.0);
+        std::string bar = std::string(filled_length, '#') + std::string(length - filled_length, '-');
+
+        std::cerr << "\r[" << bar << "] " << std::fixed << std::setprecision(0)
+                  << percent_complete << "% (" << current << "/" << total << ") "
+                  << std::fixed << std::setprecision(1) << words_per_sec << " w/s          ";
+        std::cerr.flush();
+
+        prev_time = now;
+        prev_processed = current;
+    }
+
+    void update(int current_value) {
+        current.store(current_value);
+    }
+
+    void stop() {
+        running = false;
+        if (progress_thread.joinable()) {
+            progress_thread.join();
+        }
+        std::cerr << std::endl;
+    }
+
+    void finish() {
+        current = total;
+        display(current.load());
+        stop();
+    }
+
+private:
+    std::atomic<int> current;
+    int total;
+    int length;
+    std::atomic<bool> running;
+    std::thread progress_thread;
+    std::chrono::steady_clock::time_point start_time, prev_time;
+    int prev_processed;
+};
 
 // Progress bar class to show processing status
 class ProgressBar {
@@ -179,7 +246,7 @@ void generate_suffixes(const std::string& word, std::function<void(const std::st
 void wordnum() {
     int words_n = words.size();
 
-    ProgressBar progress(words_n);
+    Progress progress(words_n);
     if (verbose) { progress.start(); }
 
     int count = 0;
@@ -191,39 +258,38 @@ void wordnum() {
         if (intwordint) { generate_suffixes(word, generate_iwi); }
     }
 
-    if (verbose) { progress.stop(); }
+    if (verbose) { progress.finish(); }
 }
 
 // Handle double mode generation (word1 + join + word2)
 void namename() {
     int words_n = words.size();
 
-    if (verbose) {
-        ProgressBar progress(words_n * (words_n - 1));
-        progress.start();
+    Progress progress(words_n * (words_n - 1));
+    if (verbose) { progress.start(); }
 
-        int count = 0;
-        for (const auto& word : words) {
-            out_minlen_uniq(word + double_join + word);
-            for (const auto& word2 : words) {
-                if (word != word2) {
-                    out_minlen_uniq(word + double_join + word2);
-                }
-            }
-            progress.update(++count);
-        }
-
-        progress.stop();
-    } else {
-        for (const auto& word : words) {
-            out_minlen_uniq(word + double_join + word);
-            for (const auto& word2 : words) {
-                if (word != word2) {
-                    out_minlen_uniq(word + double_join + word2);
-                }
+    int count = 0;
+    for (const auto& word : words) {
+        out_minlen_uniq(word + double_join + word);
+        for (const auto& word2 : words) {
+            if (word != word2) {
+                out_minlen_uniq(word + double_join + word2);
             }
         }
     }
+
+    progress.stop();
+    for (const auto& word : words) {
+        progress.update(++count);
+        out_minlen_uniq(word + double_join + word);
+        for (const auto& word2 : words) {
+            if (word != word2) {
+                out_minlen_uniq(word + double_join + word2);
+            }
+        }
+    }
+
+    if (verbose) { progress.finish(); }
 }
 
 // Load words from input file
