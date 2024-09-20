@@ -14,13 +14,9 @@
 #include <functional>
 #include <atomic>
 #include <cwchar>
-
 #include <string>
 #include <cstdlib>  // for free()
 #include <cctype>   // for std::tolower, std::toupper
-
-#include <locale>
-#include <codecvt>
 
 #include "UtfConv.h"
 
@@ -114,7 +110,6 @@ std::string utf8_toupper(const std::string& input) {
 }
 
 std::string utf8_titlecase(const std::string& str) {
-
     int i = 0;
     unsigned char c = str[i];
     size_t char_length = 0;
@@ -123,7 +118,6 @@ std::string utf8_titlecase(const std::string& str) {
     else if (c >= 0xE0 && c <= 0xEF) { char_length = 3; } // 3-byte character
     else if (c >= 0xF0 && c <= 0xF4) { char_length = 4; } // 4-byte character
     else                             { return "";       } // Invalid UTF-8 sequence
-
     return utf8_toupper(str.substr(i, char_length)) + str.substr(char_length);
 }
 
@@ -223,8 +217,7 @@ private:
 
 void out_minlen_uniq(const std::string& word) {
 
-    // TODO: FIX -- PROBLEMATIC FOR UTF8
-    if (word.length() < min_len) return;
+    if (utf8_strlen(word) < min_len) return; // TODO: needs testing
 
     if (check) {
         std::lock_guard<std::mutex> lock(mtx);
@@ -303,6 +296,7 @@ void wordnum() {
     for (const auto& word : words) {
         if (verbose) { progress.update(++count); }
 
+        out_minlen_uniq(word); // just print out var
         if (wordint)    { generate_suffixes(word, generate_wi);  }
         if (intword)    { generate_suffixes(word, generate_iw);  }
         if (intwordint) { generate_suffixes(word, generate_iwi); }
@@ -414,13 +408,13 @@ int main(int argc, char** argv) {
 
     for (const auto& word : arg_words) { add_word_variations(word); }
 
+    // Load words from file if specified
+    if (!input_file.empty()) { load_input_file(input_file); }
+
     if (verbose) {
         print_args();
         print_words();
     }
-
-    // Load words from file if specified
-    if (!input_file.empty()) { load_input_file(input_file); }
 
     // Open output file if specified
     if (to_file) { output.open(output_file); }
