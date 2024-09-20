@@ -1,6 +1,6 @@
 # hcx-fastgenlst
 
-Faster version of hcx-genlst in hcx-scripts.
+Faster version of hcx-genlst from hcx-scripts.
 
 ## Requirements
 * make
