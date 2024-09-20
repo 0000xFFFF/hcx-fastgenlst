@@ -1,5 +1,5 @@
 GCC = g++
-FILES = *.c main.cpp
+FILES = *.c *.cpp
 
 debug:
 	$(GCC) $(FILES) -o hcx-fastgenlst
