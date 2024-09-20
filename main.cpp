@@ -237,10 +237,38 @@ void append_word_from_args(const std::string word) {
     arg_words.insert(word);
 }
 
+void print_help() {
+    std::cout << 
+    "\n"
+    " generate a password wordlist from strings (words)\n"
+    "\n"
+    " options:\n"
+    "   -h         show this help message and exit\n"
+    "   -s word    append word to word set for generation (can have multiple -s)\n"
+    "   -i infile  append every line in file to word set\n"
+    "   -o outfile file to write to (default: stdout)\n"
+    "   -v         print status\n"
+    "   -l         add lowercase word variation to word set\n"
+    "   -u         add UPPERCASE word variation to word set\n"
+    "   -t         add Title word variation to word set\n"
+    "   -r         reverse string\n"
+    "   -1         word + int\n"
+    "   -2         int + word\n"
+    "   -3         int + word + int\n"
+    "   -y         just generate [0](0-100) and years 1800-2025\n"
+    "   -m number  min password len (default: 8)\n"
+    "   -c         check if output is unique, don't generate dupes, slower\n"
+    "   -d         double mode -- permutate every word in word set len 2 (<str><str>)\n"
+    "   -z         double mode -- just do (<str1><str1>)\n"
+    "   -j string  double mode -- join string (<str><join><str>)\n"
+    "\n"
+    ;
+}
 bool load_args(int& argc, char**& argv) {
     int opt;
-    while ((opt = getopt(argc, argv, "s:i:o:vlutr123cdzyjm:")) != -1) {
+    while ((opt = getopt(argc, argv, "hs:i:o:vlutr123cdzyjm:")) != -1) {
         switch (opt) {
+            case 'h': print_help(); break;
             case 's': append_word_from_args(optarg); break;
             case 'i': input_file = optarg; break;
             case 'o': output_file = optarg; to_file = true; break;
@@ -271,8 +299,10 @@ int main(int argc, char** argv) {
 
     for (const auto& word : arg_words) { add_word_variations(word); }
 
-    print_args();
-    print_words();
+    if (verbose) {
+        print_args();
+        print_words();
+    }
 
     // Load words from file if specified
     if (!input_file.empty()) { load_input_file(input_file); }
