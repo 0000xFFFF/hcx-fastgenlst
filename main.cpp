@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <set>
 #include <algorithm>
 #include <string>
 #include <thread>
@@ -21,8 +20,8 @@
 #include "utf8_strings.h"
 
 // Global settings and flags
-std::set<std::string> arg_words;
-std::set<std::string> words;
+std::unordered_set<std::string> arg_words;
+std::unordered_set<std::string> words;
 std::unordered_set<std::string> output_uniq;
 std::mutex mtx;
 bool verbose = false, verbose_more = false,
@@ -34,7 +33,7 @@ bool verbose = false, verbose_more = false,
      year = false;
 
 std::string double_join = "";
-int min_len = 8;
+size_t min_len = 8;
 std::string input_file, output_file;
 std::ofstream output;
 
@@ -122,7 +121,7 @@ private:
     int prev_processed;
 };
 
-void out_minlen_uniq(const std::string& word) {
+inline void out_minlen_uniq(const std::string& word) {
 
     if (utf8_strlen(word) < min_len) return;
 

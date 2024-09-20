@@ -6,6 +6,12 @@ Faster version of hcx-genlst in hcx-scripts.
 * make
 * g++
 
+## Build & Install
+```
+make release
+./install.sh
+```
+
 ## Usage
 ###### ./hcx-fastgenlst -h
 ```
