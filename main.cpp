@@ -124,7 +124,7 @@ private:
 
 void out_minlen_uniq(const std::string& word) {
 
-    if (utf8_strlen(word) < min_len) return; // TODO: needs testing
+    if (utf8_strlen(word) < min_len) return;
 
     if (check) {
         if (output_uniq.find(word) != output_uniq.end()) return;

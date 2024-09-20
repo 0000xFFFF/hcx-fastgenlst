@@ -1,23 +1,18 @@
 #include "utf8_strings.h"
 
-// TODO: if -1 try to get len of string anyway
-// TODO: try to make smiliar func like: python's utf8 'ignore errors' str(len())
-// TODO: compare my new version with python's
 size_t utf8_strlen(const std::string& input) {
     size_t length = 0;
     for (size_t i = 0; i < input.length(); ) {
         unsigned char c = input[i];
-        if      (c <= 0x7F)              { i += 1;    } // 1-byte character (ASCII)
-        else if (c >= 0xC2 && c <= 0xDF) { i += 2;    } // 2-byte character
-        else if (c >= 0xE0 && c <= 0xEF) { i += 3;    } // 3-byte character
-        else if (c >= 0xF0 && c <= 0xF4) { i += 4;    } // 4-byte character
-        else                             { return -1; } // Invalid UTF-8 sequence encountered at byte i
+        if      (c <= 0x7F)              { i += 1;   } // 1-byte character (ASCII)
+        else if (c >= 0xC2 && c <= 0xDF) { i += 2;   } // 2-byte character
+        else if (c >= 0xE0 && c <= 0xEF) { i += 3;   } // 3-byte character
+        else if (c >= 0xF0 && c <= 0xF4) { i += 4;   } // 4-byte character
+        else                             { continue; } // Invalid UTF-8 sequence encountered at byte i -- just ignore it
         ++length;
     }
     return length;
 }
-
-
 
 std::string utf8_tolower(const std::string& input) {
     Utf16Char* utf16_input = Utf8ToUtf16(reinterpret_cast<const Utf8Char*>(input.c_str()));

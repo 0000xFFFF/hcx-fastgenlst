@@ -20,7 +20,8 @@ size_t utf8_strlen(const std::string& str) {
         else if (c >= 0xC2 && c <= 0xDF) { i += 2;    } // 2-byte character
         else if (c >= 0xE0 && c <= 0xEF) { i += 3;    } // 3-byte character
         else if (c >= 0xF0 && c <= 0xF4) { i += 4;    } // 4-byte character
-        else                             { return -1; } // Invalid UTF-8 sequence encountered at byte i
+        else                             { continue;  } // Invalid UTF-8 sequence encountered at byte i
+                                                        // -1 == 18446744073709551615
         ++length;
     }
     return length;
@@ -190,7 +191,7 @@ int main(int argc, char** argv) {
         pool.enqueue([line, current_line, total_lines] {
             size_t cpp_length = utf8_strlen(line);
             size_t python_length = get_python_strlen(line, current_line);
-            if (cpp_length != python_length) {
+            if (cpp_length != python_length || current_line == 299) {
                 std::lock_guard<std::mutex> lock(print_mutex);
                 std::cout << current_line << "/" << total_lines << " -- '" << line << "' -- " 
                           << cpp_length << " " << python_length << std::endl;
