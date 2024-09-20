@@ -67,36 +67,29 @@ std::string utf8_titlecase(const std::string& input) {
     return utf8_toupper(input.substr(i, char_length)) + input.substr(char_length);
 }
 
-void utf8rev(char *str) {
-    /* this assumes that str is valid UTF-8 */
+std::string utf8_reverse(const std::string& input) {
+    std::string reversed = input;  // Copy the input to avoid modifying it directly
+    char* str = &reversed[0];      // Get the char pointer to the string
+
+    // Reverse the entire string
     char *scanl, *scanr, *scanr2, c;
+    for (scanl = str, scanr = str + reversed.length(); scanl < scanr;)
+        c = *scanl, *scanl++ = *--scanr, *scanr = c;
 
-    /* first reverse the string */
-    for (scanl= str, scanr= str + strlen(str); scanl < scanr;)
-        c= *scanl, *scanl++= *--scanr, *scanr= c;
-
-    /* then scan all bytes and reverse each multibyte character */
-    for (scanl= scanr= str; (c= *scanr++);) {
-        if ( (c & 0x80) == 0) // ASCII char
-            scanl= scanr;
-        else if ( (c & 0xc0) == 0xc0 ) { // start of multibyte
-            scanr2= scanr;
+    // Reverse each multibyte character
+    for (scanl = scanr = str; (c = *scanr++);) {
+        if ((c & 0x80) == 0) // ASCII character
+            scanl = scanr;
+        else if ((c & 0xc0) == 0xc0) { // Start of multibyte character
+            scanr2 = scanr;
             switch (scanr - scanl) {
-                case 4: c= *scanl, *scanl++= *--scanr, *scanr= c; // fallthrough
+                case 4: c = *scanl, *scanl++ = *--scanr, *scanr = c; // fallthrough
                 case 3: // fallthrough
-                case 2: c= *scanl, *scanl++= *--scanr, *scanr= c;
+                case 2: c = *scanl, *scanl++ = *--scanr, *scanr = c;
             }
-            scanr= scanl= scanr2;
+            scanr = scanl = scanr2;
         }
     }
-}
 
-std::string utf8_reverse(const std::string& input) {
-    char* buff = new char[input.length()+1];
-    std::strcpy(buff, input.c_str());
-    utf8rev(buff);
-    std::string reversed(buff);
-    delete[] buff;
     return reversed;
 }
-
