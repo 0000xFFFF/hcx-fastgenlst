@@ -8,7 +8,7 @@ Faster version of hcx-genlst in hcx-scripts.
 
 ## Build & Install
 ```
-make release
+make
 ./install.sh
 ```
 
