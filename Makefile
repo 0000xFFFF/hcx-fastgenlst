@@ -1,7 +1,8 @@
 GCC = g++
+FILES = *.c main.cpp
 
 debug:
-	$(GCC) main.cpp -o hcx-fastgenlst
+	$(GCC) $(FILES) -o hcx-fastgenlst
 
 release:
-	$(GCC) -g -Wall -Wextra main.cpp -o hcx-fastgenlst
+	$(GCC) -g -Wall -Wextra $(FILES) -o hcx-fastgenlst

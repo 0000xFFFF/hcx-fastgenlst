@@ -14,6 +14,8 @@
 #include <functional>
 #include <atomic>
 
+#include "UtfConv.h"
+
 // Global settings and flags
 std::set<std::string> arg_words;
 std::set<std::string> words;
@@ -47,14 +49,18 @@ void add_word_variations(const std::string& word) {
     words.insert(word);
     // TODO: FIX -- PROBLEMATIC FOR UTF8
     if (lower) {
-        std::string lower_word = word;
-        std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(), ::tolower);
-        words.insert(word);
+
+
+
+
     }
     if (upper) {
-        std::string upper_word = word;
-        std::transform(upper_word.begin(), upper_word.end(), upper_word.begin(), ::toupper);
-        words.insert(upper_word);
+        char* buffer = (char*)calloc(sizeof(char), word.size());
+        strcpy(buffer, word.c_str());
+
+        Utf32Char* utf32chars = Utf8ToUtf32((Utf8Char*)buffer);
+        Utf32Char* utf32chars_upper = StrToUprUtf32(utf32chars);
+        words.insert(word);
     }
     if (title) {
         std::string title_word = word;
