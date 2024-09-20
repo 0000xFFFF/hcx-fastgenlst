@@ -14,6 +14,7 @@
 #include <functional>
 
 // Global settings and flags
+std::set<std::string> arg_words;
 std::set<std::string> words;
 std::unordered_set<std::string> output_uniq;
 std::mutex mtx;
@@ -232,11 +233,15 @@ void load_input_file(const std::string& input_file) {
     while (std::getline(infile, line)) { add_word_variations(line); }
 }
 
+void append_word_from_args(const std::string word) {
+    arg_words.insert(word);
+}
+
 bool load_args(int& argc, char**& argv) {
     int opt;
     while ((opt = getopt(argc, argv, "s:i:o:vlutr123cdzyjm:")) != -1) {
         switch (opt) {
-            case 's': add_word_variations(optarg); break;
+            case 's': append_word_from_args(optarg); break;
             case 'i': input_file = optarg; break;
             case 'o': output_file = optarg; to_file = true; break;
             case 'v': verbose = true; break;
@@ -263,6 +268,8 @@ bool load_args(int& argc, char**& argv) {
 int main(int argc, char** argv) {
 
     if (!load_args(argc, argv)) { return 1; }
+
+    for (const auto& word : arg_words) { add_word_variations(word); }
 
     print_args();
     print_words();
