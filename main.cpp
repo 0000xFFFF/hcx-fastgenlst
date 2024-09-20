@@ -278,7 +278,6 @@ void namename() {
         }
     }
 
-    progress.stop();
     for (const auto& word : words) {
         progress.update(++count);
         out_minlen_uniq(word + double_join + word);
