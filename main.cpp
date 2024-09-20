@@ -223,6 +223,7 @@ void namename() {
         out_minlen_uniq(word + double_join + word);
     }
 
+    // TODO: try to speed this up it's really slow -- python itertools is faster :/
     if (!double_small) {
         for (const auto& word : words) {
             progress.update(++count);
