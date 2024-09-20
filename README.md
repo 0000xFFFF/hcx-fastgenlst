@@ -1,4 +1,4 @@
-# hcx-scripts
+# hcx-fastgenlst
 
 hcx-scripts's hcx-genlst but faster.
 
