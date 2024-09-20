@@ -385,7 +385,7 @@ bool load_args(int& argc, char**& argv) {
         switch (opt) {
             case 'h': print_help(); break;
             case 's': append_word_from_args(optarg); break;
-            case 'i': input_file = optarg; break;
+            case 'i': input_file = optarg; break; // TODO: check if valid file specified
             case 'o': output_file = optarg; to_file = true; break;
             case 'v': verbose = true; break;
             case 'l': lower = true; break;
