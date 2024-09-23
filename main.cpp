@@ -123,6 +123,24 @@ private:
     std::mutex cerr_mutex;
 };
 
+
+class Timer {
+public:
+    // start timer
+    Timer() : start_time(std::chrono::high_resolution_clock::now()) {}
+
+    // end timer
+    ~Timer() {
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+
+        std::cerr << "took: " << duration.count() << " microseconds" << std::endl;
+    }
+
+private:
+    std::chrono::high_resolution_clock::time_point start_time;
+};
+
 inline void out_minlen_uniq(const std::string& word) {
 
     if (utf8_strlen(word) < min_len) return;
@@ -315,6 +333,8 @@ void print_loaded_words() {
 
 // Main function
 int main(int argc, char** argv) {
+
+    Timer t; // start timer for whole program
 
     if (!load_args(argc, argv)) { return 1; }
 
