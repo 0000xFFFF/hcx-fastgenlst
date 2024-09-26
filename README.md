@@ -1,6 +1,25 @@
-# hcx-fastgenlst
+# hcx-fastgenlst - faster version of hcx-genlst from hcx-scripts
 
-Faster version of hcx-genlst from hcx-scripts.
+Generate a password wordlist from strings (words).
+
+###### ./hcx-fastgenlst -s steve -lut123
+Will generate passwords like:
+```
+steve123
+steve69
+Steve42
+123STEVE
+steve012345
+...
+```
+```
+* -l add lowercase variation  # e.g. steve => steve
+* -u add uppercase variation  # e.g. steve => STEVE
+* -t add titlecase variation  # e.g. steve => Steve  |  stEve => StEve
+* -1 word + int               # e.g. steve123
+* -2 int + word               # e.g. 123STEVE
+* -3 int + word + int         # e.g. 12steve12
+```
 
 ## Requirements
 * make
