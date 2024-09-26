@@ -48,8 +48,8 @@ make
    -v         be verbose (print status)
    -l         add lowercase word variation to word set
    -u         add UPPERCASE word variation to word set
-   -t         add Title word variation to word set
-   -r         reverse string
+   -t         add Titlecase word variation to word set
+   -r         add reversed word variation to word set
    -1         word + int
    -2         int + word
    -3         int + word + int
