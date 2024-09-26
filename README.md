@@ -1,8 +1,12 @@
-# hcx-fastgenlst - faster version of hcx-genlst from hcx-scripts
+# hcx-fastgenlst
 
 Generate a password wordlist from strings (words).
 
-###### ./hcx-fastgenlst -s steve -lut123
+###### this is a faster version of hcx-genlst from [hcx-scripts](https://github.com/0000xFFFF/hcx-scripts)
+
+## Example
+> ./hcx-fastgenlst -s steve -lut123
+
 Will generate passwords like:
 ```
 steve123
@@ -32,7 +36,7 @@ make
 ```
 
 ## Usage
-###### ./hcx-fastgenlst -h
+> ./hcx-fastgenlst -h
 ```
  generate a password wordlist from strings (words)
 
