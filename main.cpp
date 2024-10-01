@@ -127,10 +127,17 @@ private:
 class Timer {
 public:
     // start timer
-    Timer() : start_time(std::chrono::high_resolution_clock::now()) {}
+    //Timer() : start_time(std::chrono::high_resolution_clock::now()) {}
 
     // end timer
-    ~Timer() {
+    //~Timer() { stop(); }
+    
+
+    void start () {
+        start_time = std::chrono::high_resolution_clock::now();
+    }
+
+    void stop() {
         auto end_time = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
@@ -352,7 +359,7 @@ int main(int argc, char** argv) {
     // Load words from file if specified
     if (!input_file.empty()) { load_input_file(input_file); }
 
-    if (verbose) { print_args(); }
+    if (verbose) { print_args(); t.start(); }
     if (verbose_more) { print_loaded_words(); }
 
     // Open output file if specified
@@ -363,6 +370,8 @@ int main(int argc, char** argv) {
     else             { wordnum();  }
 
     if (to_file) { output.close(); }
+
+    if (verbose) { t.stop(); }
 
     return 0;
 }
