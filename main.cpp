@@ -296,6 +296,11 @@ void print_help() {
     ;
 }
 
+void verbosify() {
+    if (verbose) { verbose_more = true; }
+    else         { verbose = true;      }
+}
+
 bool load_args(int& argc, char**& argv) {
     int opt;
     while ((opt = getopt(argc, argv, "hs:i:o:vlutr123cdzyjm:")) != -1) {
@@ -304,7 +309,7 @@ bool load_args(int& argc, char**& argv) {
             case 's': append_word_from_args(optarg); break;
             case 'i': input_file = optarg; break;
             case 'o': output_file = optarg; to_file = true; break;
-            case 'v': verbose = true; break;
+            case 'v': verbosify(); break;
             case 'l': lower = true; break;
             case 'u': upper = true; break;
             case 't': title = true; break;
@@ -326,9 +331,13 @@ bool load_args(int& argc, char**& argv) {
 
 
 void print_loaded_words() {
+    std::cerr << "==[ LOADED WORDS BEGIN ]==" << std::endl;
+    int i = 0;
     for (const auto& word : words) {
-        std::cerr << word << " -- " <<  utf8_strlen(word) << std::endl;
+        i++;
+        std::cerr << i << "/" << words.size() << " -- " << word << " -- " <<  utf8_strlen(word) << std::endl;
     }
+    std::cerr << "==[ LOADED WORDS END ]==" << std::endl;
 }
 
 // Main function
@@ -344,8 +353,7 @@ int main(int argc, char** argv) {
     if (!input_file.empty()) { load_input_file(input_file); }
 
     if (verbose) { print_args(); }
-
-    //print_loaded_words();
+    if (verbose_more) { print_loaded_words(); }
 
     // Open output file if specified
     if (to_file) { output.open(output_file); }

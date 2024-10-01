@@ -1,4 +1,5 @@
 #include "utf8_strings.h"
+#include "UtfConv.h"
 
 size_t utf8_strlen(const std::string& input) {
     size_t length = 0;
@@ -15,36 +16,16 @@ size_t utf8_strlen(const std::string& input) {
 }
 
 std::string utf8_tolower(const std::string& input) {
-    Utf16Char* utf16_input = Utf8ToUtf16(reinterpret_cast<const Utf8Char*>(input.c_str()));
-    if (!utf16_input) { return ""; }
-
-    Utf16Char* lower_utf16 = Utf16StrMakeLwrUtf16Str(utf16_input);
-    free(utf16_input);
-    if (!lower_utf16) { return ""; }
-
-    Utf8Char* lower_utf8 = Utf16ToUtf8(lower_utf16);
-    free(lower_utf16);
-    if (!lower_utf8) { return ""; }
-
-    std::string result(reinterpret_cast<char*>(lower_utf8));
-    free(lower_utf8);  // Free the UTF-8 string
+    Utf8Char* buff = Utf8StrMakeLwrUtf8Str(reinterpret_cast<const Utf8Char*>(input.c_str()));
+    std::string result(reinterpret_cast<char*>(buff));
+    free(buff);
     return result;
 }
 
 std::string utf8_toupper(const std::string& input) {
-    Utf16Char* utf16_input = Utf8ToUtf16(reinterpret_cast<const Utf8Char*>(input.c_str()));
-    if (!utf16_input) { return ""; }
-
-    Utf16Char* upper_utf16 = Utf16StrMakeUprUtf16Str(utf16_input);
-    free(utf16_input);
-    if (!upper_utf16) { return ""; }
-
-    Utf8Char* upper_utf8 = Utf16ToUtf8(upper_utf16);
-    free(upper_utf16);
-    if (!upper_utf8) { return ""; }
-
-    std::string result(reinterpret_cast<char*>(upper_utf8));
-    free(upper_utf8);
+    Utf8Char* buff = Utf8StrMakeUprUtf8Str(reinterpret_cast<const Utf8Char*>(input.c_str()));
+    std::string result(reinterpret_cast<char*>(buff));
+    free(buff);
     return result;
 }
 
