@@ -30,7 +30,7 @@ steve012345
 * g++
 
 ## Build & Install
-```
+```bash
 make
 sudo make install
 ```
