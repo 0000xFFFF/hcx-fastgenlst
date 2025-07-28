@@ -5,7 +5,7 @@ Generate a password wordlist from strings (words).
 ###### this is a faster version of hcx-genlst from [hcx-scripts](https://github.com/0000xFFFF/hcx-scripts)
 
 ## Example
-```bash
+```sh
 ./hcx-fastgenlst -s steve -lut123
 ```
 
@@ -32,7 +32,7 @@ steve012345
 * g++
 
 ## Build & Install
-```bash
+```sh
 make
 sudo make install
 ```
