@@ -32,7 +32,7 @@ steve012345
 ## Build & Install
 ```
 make
-./install.sh
+sudo make install
 ```
 
 ## Usage
