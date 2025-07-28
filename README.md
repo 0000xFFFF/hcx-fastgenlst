@@ -38,7 +38,10 @@ sudo make install
 ```
 
 ## Usage
-> ./hcx-fastgenlst -h
+```
+./hcx-fastgenlst -h
+```
+
 ```
  generate a password wordlist from strings (words)
 
