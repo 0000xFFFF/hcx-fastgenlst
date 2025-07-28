@@ -25,6 +25,9 @@ o3c:
 
 all: release o1 o2 o3 o1c o2c o3c
 
+clean:
+	rm hcx-fastgenlst*
+
 install:
 	install -m 755 hcx-fastgenlst /usr/local/bin
 
