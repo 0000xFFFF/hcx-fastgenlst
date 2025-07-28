@@ -5,3 +5,6 @@ hyperfine \
     "./hcx-fastgenlst-o1 -s hello -lut123" \
     "./hcx-fastgenlst-o2 -s hello -lut123" \
     "./hcx-fastgenlst-o3 -s hello -lut123" \
+    "./hcx-fastgenlst-o1-c -s hello -lut123" \
+    "./hcx-fastgenlst-o2-c -s hello -lut123" \
+    "./hcx-fastgenlst-o3-c -s hello -lut123" \
