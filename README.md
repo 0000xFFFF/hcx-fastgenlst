@@ -5,7 +5,9 @@ Generate a password wordlist from strings (words).
 ###### this is a faster version of hcx-genlst from [hcx-scripts](https://github.com/0000xFFFF/hcx-scripts)
 
 ## Example
-> ./hcx-fastgenlst -s steve -lut123
+```bash
+./hcx-fastgenlst -s steve -lut123
+```
 
 Will generate passwords like:
 ```
