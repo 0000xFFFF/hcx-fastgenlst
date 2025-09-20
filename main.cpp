@@ -19,6 +19,8 @@
 
 #include "utf8_strings.h"
 
+#define HCX_FASTGENLST_VERSION "2.0.0"
+
 // Global settings and flags
 std::unordered_set<std::string> arg_words;
 std::unordered_set<std::string> words;
@@ -277,6 +279,9 @@ void append_word_from_args(const std::string word) {
 
 void print_help() {
     std::cout << 
+    "Usage: hcx-fastgenlst [options]\n"
+    "\n"
+    " version: " HCX_FASTGENLST_VERSION "\n"
     "\n"
     " generate a password wordlist from strings (words)\n"
     "\n"
