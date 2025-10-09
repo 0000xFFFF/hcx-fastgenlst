@@ -19,7 +19,7 @@
 
 #include "utf8_strings.h"
 
-#define HCX_FASTGENLST_VERSION "2.0.0"
+#define HCX_FASTGENLST_VERSION "2.0.1"
 
 // Global settings and flags
 std::unordered_set<std::string> arg_words;
@@ -317,7 +317,7 @@ bool load_args(int& argc, char**& argv) {
     int opt;
     while ((opt = getopt(argc, argv, "hs:i:o:vlutr123cdzyjm:")) != -1) {
         switch (opt) {
-            case 'h': print_help(); break;
+            case 'h': print_help(); exit(0); break;
             case 's': append_word_from_args(optarg); break;
             case 'i': input_file = optarg; break;
             case 'o': output_file = optarg; to_file = true; break;
