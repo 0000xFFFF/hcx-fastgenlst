@@ -18,7 +18,7 @@
 
 #include "utf8_strings.h"
 
-#define HCX_FASTGENLST_VERSION "2.0.1"
+#define HCX_FASTGENLST_VERSION "2.2.0"
 
 // Global settings and flags
 std::unordered_set<std::string> arg_words;
