@@ -30,6 +30,7 @@ steve012345
 ## Requirements
 * make
 * g++
+* [argparse](https://github.com/p-ranav/argparse)
 
 ## Build & Install
 ```sh
@@ -43,25 +44,28 @@ sudo make install
 ```
 
 ```
- generate a password wordlist from strings (words)
+Usage: hcx-fastgenlst [--help] [--version] [--string VAR]... [--input VAR] [--output VAR] [--verbose] [--lower] [--upper] [--title] [--reverse] [--wordint] [--intword] [--intwordint] [--check] [--double] [--double-small] [--year] [--join VAR] [--min-len VAR]
 
- options:
-   -h         show this help message and exit
-   -s word    append word to word set for generation (can have multiple -s)
-   -i infile  append every line in file to word set
-   -o outfile file to write to (default: stdout)
-   -v         be verbose (print status)
-   -l         add lowercase word variation to word set
-   -u         add UPPERCASE word variation to word set
-   -t         add Titlecase word variation to word set
-   -r         add reversed word variation to word set
-   -1         word + int
-   -2         int + word
-   -3         int + word + int
-   -y         just generate [0](0-100) and years 1800-2025
-   -m number  min password len (default: 8)
-   -c         check if output is unique, don't generate dupes, slower
-   -d         double mode -- permutate every word in word set len 2 (<str><str>)
-   -z         double mode -- just do (<str1><str1>)
-   -j string  double mode -- join string (<str><join><str>)
+Generate a password wordlist from strings (words)
+
+Optional arguments:
+  -h, --help          shows help message and exits
+  -v, --version       prints version information and exits
+  -s, --string        append word to word set for generation (can have multiple -s) [may be repeated]
+  -i, --input         append every line in file to word set
+  -o, --output        file to write to (default: stdout)
+  -v, --verbose       be verbose (print status)
+  -l, --lower         add lowercase word variation to word set
+  -u, --upper         add UPPERCASE word variation to word set
+  -t, --title         add Titlecase word variation to word set
+  -r, --reverse       add reversed word variation to word set
+  -1 --wordint        word + int
+  -2 --intword        int + word
+  -3 --intwordint     int + word + int
+  -c, --check         check if output is unique, don't generate dupes, slower
+  -d, --double        double mode -- permutate every word in word set len 2 (<str><str>)
+  -z, --double-small  double mode -- just do (<str1><str1>)
+  -y, --year          just generate [0](0-100) and years 1800-2025
+  -j, --join          double mode -- join string (<str><join><str>) [nargs=0..1] [default: ""]
+  -m, --min-len       min password len (default: 8) [nargs=0..1] [default: 8]
 ```

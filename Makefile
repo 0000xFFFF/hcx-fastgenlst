@@ -29,7 +29,8 @@ clean:
 	rm hcx-fastgenlst*
 
 install:
-	install -m 755 hcx-fastgenlst /usr/local/bin/hcx-fastgenlst
+	#install -m 755 hcx-fastgenlst /usr/local/bin/hcx-fastgenlst
+	ln -sfr hcx-fastgenlst /usr/local/bin/hcx-fastgenlst
 
 uninstall:
 	rm /usr/local/bin/hcx-fastgenlst
