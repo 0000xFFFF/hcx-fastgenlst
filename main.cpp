@@ -15,7 +15,6 @@
 #include <cwchar>
 #include <string>
 #include <cstdlib>  // for free()
-#include <cctype>   // for std::tolower, std::toupper
 
 #include "utf8_strings.h"
 
