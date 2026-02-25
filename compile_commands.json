@@ -1,0 +1,47 @@
+[
+  {
+    "file": "src/UtfConv.c",
+    "arguments": [
+      "g++",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-O2",
+      "src/UtfConv.c",
+      "-o",
+      "hcx-fastgenlst"
+    ],
+    "directory": "/home/user/.vip/mytools/hcx-fastgenlst",
+    "output": "hcx-fastgenlst"
+  },
+  {
+    "file": "src/main.cpp",
+    "arguments": [
+      "g++",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-O2",
+      "src/main.cpp",
+      "-o",
+      "hcx-fastgenlst"
+    ],
+    "directory": "/home/user/.vip/mytools/hcx-fastgenlst",
+    "output": "hcx-fastgenlst"
+  },
+  {
+    "file": "src/utf8_strings.cpp",
+    "arguments": [
+      "g++",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-O2",
+      "src/utf8_strings.cpp",
+      "-o",
+      "hcx-fastgenlst"
+    ],
+    "directory": "/home/user/.vip/mytools/hcx-fastgenlst",
+    "output": "hcx-fastgenlst"
+  }
+]
