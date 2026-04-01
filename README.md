@@ -2,7 +2,7 @@
 
 Generate a password wordlist from strings (words).
 
-###### this is a faster version of hcx-genlst from [hcx-scripts](https://github.com/0000xFFFF/hcx-scripts)
+###### this is a faster version of hcx-genlst from [hcx-tools-extra](https://github.com/0000xFFFF/hcx-tools-extra)
 
 ## Example
 ```sh
